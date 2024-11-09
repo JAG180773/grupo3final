@@ -225,7 +225,7 @@ if centro_seleccionado != "Seleccione una opción" and not centro_df.empty:
                                 (centro_df['provincia'] == provincia_seleccionada) & 
                                 (centro_df['distrito'] == distrito_seleccionado)]['ubigeo_reniec'].values[0]
         df_inei_by = df_inei[df_inei['ubigeo_reniec'] == ubigeo_reniec]
-    
+        df_inei_by= df_inei_by.sort_values(by='Edad_Anio')      
         
         # resume de la informacion Covid Positivo de La Poblacion Por Distrito  
         #distrito_covid_filtrados = df_covid[(df_covid['DEPARTAMENTO'] == region_seleccionada) &
