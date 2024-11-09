@@ -251,7 +251,7 @@ if centro_seleccionado != "Seleccione una opción" and not centro_df.empty:
             height = p.get_height()
             if height > 0:  # Solo anotar si el valor es mayor que cero
                 ax1.annotate(f'{int(height)}', (p.get_x() + p.get_width() / 2., height),
-                            ha='center', va='bottom', fontsize=12, color='black')
+                            ha='center', va='bottom', fontsize=10, color='black')
         plt.xticks(rotation=90)
         plt.xlabel('Rango de Edad')
         plt.ylabel('Poblacion') 
@@ -262,7 +262,7 @@ if centro_seleccionado != "Seleccione una opción" and not centro_df.empty:
         ax =sns.barplot(x=centros_por_entidad.index, y=centros_por_entidad.values, palette='pastel')
         for p in ax.patches:
             ax.annotate(f'{int(height)}', (p.get_x() + p.get_width() / 2., height),
-                        ha='center', va='bottom', fontsize=12, color='black')
+                        ha='center', va='bottom', fontsize=10, color='black')
         #plt.xticks(rotation=90)
         plt.title('Cantidad de Centros de Vacunación por Provincia')
         plt.xlabel('Entidad que Administra')
