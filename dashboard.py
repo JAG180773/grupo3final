@@ -245,12 +245,12 @@ if centro_seleccionado != "Seleccione una opción" and not centro_df.empty:
         plt.title(titulo_grafico)
         df_inei_by= df_inei_by.sort_values(by='Edad_Anio')  
 
-        ax = sns.barplot(x='Edad_Anio', y='Cantidad', data=df_inei_by, palette='viridis', errorbar=None, hue='Sexo')
+        ax1 = sns.barplot(x='Edad_Anio', y='Cantidad', data=df_inei_by, palette='viridis', errorbar=None, hue='Sexo')
         # Añadir etiquetas de texto sobre las barras
-        for p in ax.patches:
+        for p in ax1.patches:
             height = p.get_height()
             if height > 0:  # Solo anotar si el valor es mayor que cero
-                ax.annotate(f'{int(height)}', (p.get_x() + p.get_width() / 2., height),
+                ax1.annotate(f'{int(height)}', (p.get_x() + p.get_width() / 2., height),
                             ha='center', va='bottom', fontsize=12, color='black')
         plt.xticks(rotation=90)
         plt.xlabel('Rango de Edad')
@@ -263,7 +263,7 @@ if centro_seleccionado != "Seleccione una opción" and not centro_df.empty:
         for p in ax.patches:
             ax.annotate(f'{int(height)}', (p.get_x() + p.get_width() / 2., height),
                         ha='center', va='bottom', fontsize=12, color='black')
-        plt.xticks(rotation=90)
+        #plt.xticks(rotation=90)
         plt.title('Cantidad de Centros de Vacunación por Provincia')
         plt.xlabel('Entidad que Administra')
         plt.ylabel('Número de Centros de Vacunacion')
