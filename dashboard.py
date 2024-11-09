@@ -225,7 +225,7 @@ if centro_seleccionado != "Seleccione una opción" and not centro_df.empty:
                                 (centro_df['provincia'] == provincia_seleccionada) & 
                                 (centro_df['distrito'] == distrito_seleccionado)]['ubigeo_reniec'].values[0]
         df_inei_by = df_inei[df_inei['ubigeo_reniec'] == ubigeo_reniec]
-        df_inei_by= df_inei_by.sort_values(by='Edad_Anio')      
+    
         
         # resume de la informacion Covid Positivo de La Poblacion Por Distrito  
         #distrito_covid_filtrados = df_covid[(df_covid['DEPARTAMENTO'] == region_seleccionada) &
@@ -241,6 +241,7 @@ if centro_seleccionado != "Seleccione una opción" and not centro_df.empty:
         plt.figure(figsize=(10, 5))
         titulo_grafico = "Total de Poblacion del Distrito: " +  distrito_seleccionado
         plt.title(titulo_grafico)
+        df_inei_by= df_inei_by.sort_values(by='Edad_Anio')  
         sns.barplot(x='Edad_Anio', y='Cantidad', data=df_inei_by, palette='viridis', errorbar=None, hue='Sexo')
         plt.xlabel('Rango de Edad')
         plt.ylabel('Poblacion') 
