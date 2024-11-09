@@ -10,11 +10,19 @@ import numpy as np
 #from streamlit_folium import st_folium
 from secciones.mapa_ubicacion import generar_mapa_ubicacion
 from secciones.tabla_estadisticas import generar_tabla_estadisticas
+import base64
 #from folium.plugins import MarkerCluster
 
 #url_centros= "https://cloud.minsa.gob.pe/s/96XbzfYBCGcwtp7"
 image_url = 'https://drive.google.com/thumbnail?id=1kY4-rRTGbDpgkR8GcLvNkMrhZ7KXCtLL'
 
+#image_url = "https://drive.google.com/file/d/1ARrzPWZoBvt2PYW2x51AhGoEJEm24441/view?usp=drive_link"
+def load_image(image_path):
+    with open(image_path, "rb") as image_file:
+        return base64.b64encode(image_file.read()).decode()
+image_path='18704.jpg' 
+image_url = f"data:image/jpeg;base64,{load_image(image_path)}"   
+    
 
 # Configurar el fondo con una imagen
 st.markdown(f"""
