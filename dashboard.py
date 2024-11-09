@@ -260,9 +260,9 @@ if centro_seleccionado != "Seleccione una opción" and not centro_df.empty:
         centros_por_entidad = df_filtrado_multiple['entidad_administra'].value_counts()
         # Crear un diagrama de barras
         ax =sns.barplot(x=centros_por_entidad.index, y=centros_por_entidad.values, palette='pastel')
-        for p in ax.patches:
-            ax.annotate(f'{int(height)}', (p.get_x() + p.get_width() / 2., height),
-                        ha='center', va='bottom', fontsize=10, color='black')
+        #for p in ax.patches:
+        #    ax.annotate(f'{int(height)}', (p.get_x() + p.get_width() / 2., height),
+        #                ha='center', va='bottom', fontsize=10, color='black')
         #plt.xticks(rotation=90)
         plt.title('Cantidad de Centros de Vacunación por Provincia')
         plt.xlabel('Entidad que Administra')
