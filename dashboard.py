@@ -92,9 +92,9 @@ def cargar_datos():
     df1.rename(columns={'nombre': 'Centro_vacunacion'}, inplace=True)
     df1.drop(['id_centro_vacunacion', 'id_eess'], axis=1, inplace=True)
     df1.replace('', np.nan, inplace=True)
-    df1['entidad_administra'] = df1['entidad_administra'].fillna('OTROS')
-    valores_comparacion = ["MINSA", "ESSALUD", "PRIVADO","DIRESA", "OTROS"]
-    df1.loc[~df1['entidad_administra'].isin(valores_comparacion), 'entidad_administra'] = "OTROS"
+    df1['entidad_administra'] = df1['entidad_administra'].fillna('NO ESP.')
+    valores_comparacion = ["MINSA", "ESSALUD", "PRIVADO","DIRESA", "NO ESP."]
+    df1.loc[~df1['entidad_administra'].isin(valores_comparacion), 'entidad_administra'] = "NO ESP."
     df_ubigeo = pd.read_csv("TB_UBIGEOS.csv", sep=";")
     df_ub = df_ubigeo[['id_ubigeo', 'provincia', 'distrito', 'region','ubigeo_inei','ubigeo_reniec']]
     df3 = pd.merge(df1, df_ub, on='id_ubigeo', how='left')
@@ -149,7 +149,7 @@ st.markdown("""
 # Título con la clase personalizada
 st.markdown('<div class="title">Mapa de Ubicación del Centro de Vacunación Seleccionado</div>', unsafe_allow_html=True)
 
-st.sidebar.title("Elige tu Centro de Vacunación")
+st.sidebar.title("Selecciona tu Centro de Vacunación")
 
 # Agregar una opción "Seleccione una opción" al selectbox de región
 region_opciones = ["Seleccione una opción"] + sorted(df3['region'].unique().tolist())
@@ -179,9 +179,9 @@ if provincia_seleccionada != "Seleccione una opción":
     refresh_datos = False
 # Filtrar centros de vacunación según distrito
 if distrito_seleccionado != "Seleccione una opción":
-    entidad_administradora ="OTROS"
-    options = ["OTROS","MINSA", "ESSALUD", "PRIVADO", "DIRESA"]
-    default_index = options.index("OTROS")
+    entidad_administradora ="NO ESP."
+    options = ["NO ESP.","MINSA", "ESSALUD", "PRIVADO", "DIRESA"]
+    default_index = options.index("NO ESP.")
     entidad_administradora = st.sidebar.radio(
         "Seleccione la entidad administradora",
         options=options,
@@ -225,7 +225,8 @@ if centro_seleccionado != "Seleccione una opción" and not centro_df.empty:
                                 (centro_df['provincia'] == provincia_seleccionada) & 
                                 (centro_df['distrito'] == distrito_seleccionado)]['ubigeo_reniec'].values[0]
         df_inei_by = df_inei[df_inei['ubigeo_reniec'] == ubigeo_reniec]
-    
+        df_filtrado_multiple = df3[(df3['region'] == region_seleccionada) & 
+                                   (df3['provincia'] == provincia_seleccionada)]
         
         # resume de la informacion Covid Positivo de La Poblacion Por Distrito  
         #distrito_covid_filtrados = df_covid[(df_covid['DEPARTAMENTO'] == region_seleccionada) &
@@ -238,13 +239,31 @@ if centro_seleccionado != "Seleccione una opción" and not centro_df.empty:
     
     #plt.subplot(2, 1, 1) 
     if not grafico_inei:
+        
         plt.figure(figsize=(10, 5))
         titulo_grafico = "Total de Poblacion del Distrito: " +  distrito_seleccionado
         plt.title(titulo_grafico)
         df_inei_by= df_inei_by.sort_values(by='Edad_Anio')  
-        sns.barplot(x='Edad_Anio', y='Cantidad', data=df_inei_by, palette='viridis', errorbar=None, hue='Sexo')
+
+        ax = sns.barplot(x='Edad_Anio', y='Cantidad', data=df_inei_by, palette='viridis', errorbar=None, hue='Sexo')
+        # Añadir etiquetas de texto sobre las barras
+        for p in ax.patches:
+            ax.annotate(f'{int(p.get_height())}', (p.get_x() + p.get_width() / 2., p.get_height()),
+                        ha='center', va='bottom', fontsize=12, color='black')
         plt.xlabel('Rango de Edad')
         plt.ylabel('Poblacion') 
+        st.pyplot(plt)
+        plt.clf()
+        centros_por_entidad = df_filtrado_multiple['entidad_administra'].value_counts()
+        # Crear un diagrama de barras
+        ax =sns.barplot(x=centros_por_entidad.index, y=centros_por_entidad.values, palette='pastel')
+        for p in ax.patches:
+            ax.annotate(f'{int(p.get_height())}', (p.get_x() + p.get_width() / 2., p.get_height()),
+                        ha='center', va='bottom', fontsize=12, color='black')
+        plt.xticks(rotation=90)
+        plt.title('Cantidad de Centros de Vacunación por Provincia')
+        plt.xlabel('Entidad que Administra')
+        plt.ylabel('Número de Centros de Vacunacion')
         st.pyplot(plt)
         plt.clf()
         grafico_inei= True
